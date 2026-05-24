@@ -4,11 +4,12 @@
   "private": true,
   "description": "A cinematic luxury prototype showcasing premium 3D digital experiences.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/run-dev.mjs",
+    "build": "node scripts/run-build.mjs",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\""
   },
   "dependencies": {
     "clsx": "^2.1.1",

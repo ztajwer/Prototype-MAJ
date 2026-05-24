@@ -11,7 +11,7 @@ const nextConfig = {
           {
             key: "Link",
             value:
-              "</bbg.png>; rel=preload; as=image, </b.png>; rel=preload; as=image, </customize_bg.png>; rel=preload; as=image, </vid.mp4>; rel=preload; as=video",
+              "</bbg.png>; rel=preload; as=image, </b.png>; rel=preload; as=image, </customize_bg.png>; rel=preload; as=image, </vid.mp4>; rel=preload; as=video, </mob_vid.mp4>; rel=preload; as=video",
           },
         ],
       },

@@ -23,23 +23,25 @@ export const GLASS_TABLE_MOBILE = {
   bgOriginYEnd: 54,
 } as const;
 
-/** Fixed product placement — does not change with scroll */
+/** Fixed product placement — centered on the glass table in the photo */
 const PRODUCT_LOCK = {
   desktop: {
-    anchorY: 54,
+    anchorY: 50,
+    tableLiftY: -32,
     orbitScale: 0.78,
-    cameraTilt: 5.5,
-    tableTilt: 4,
+    cameraTilt: 3.5,
+    tableTilt: 2,
     perspectiveY: 46,
-    parallaxY: 16,
+    parallaxY: 6,
   },
   mobile: {
-    anchorY: 52,
+    anchorY: 50,
+    tableLiftY: -38,
     orbitScale: 0.74,
-    cameraTilt: 5,
-    tableTilt: 3.5,
-    perspectiveY: 50,
-    parallaxY: 12,
+    cameraTilt: 3,
+    tableTilt: 1.5,
+    perspectiveY: 48,
+    parallaxY: 4,
   },
 } as const;
 
@@ -56,6 +58,7 @@ export type ShowroomZoomState = {
   vanishY: number;
   perspectiveY: number;
   anchorY: number;
+  tableLiftY: number;
   offsetY: number;
   cameraTilt: number;
   tableTilt: number;
@@ -88,6 +91,7 @@ export function getShowroomZoomState(
     depthPush: 0,
     perspectiveY: lock.perspectiveY,
     anchorY: lock.anchorY,
+    tableLiftY: lock.tableLiftY,
     /** Subtle parallax so pieces track the table in the photo, not scale */
     offsetY: travel * lock.parallaxY,
     cameraTilt: lock.cameraTilt,

@@ -10,6 +10,8 @@ export type CinematicVideoProps = Omit<
 > & {
   /** `cover` fills the frame; `contain` shows the full clip (portrait doors) */
   fit?: "cover" | "contain";
+  /** Fine-tune framing — e.g. mobile doors clip */
+  objectPosition?: string;
   src?: string;
 };
 
@@ -18,6 +20,7 @@ export const CinematicVideo = forwardRef<HTMLVideoElement, CinematicVideoProps>(
     {
       className,
       fit = "cover",
+      objectPosition = "center center",
       src = WELCOME_VIDEO,
       autoPlay = true,
       muted = true,
@@ -31,8 +34,8 @@ export const CinematicVideo = forwardRef<HTMLVideoElement, CinematicVideoProps>(
   ) {
     const objectStyle =
       fit === "contain"
-        ? { objectFit: "contain" as const, objectPosition: "center center" }
-        : { objectFit: "cover" as const, objectPosition: "center center" };
+        ? { objectFit: "contain" as const, objectPosition }
+        : { objectFit: "cover" as const, objectPosition };
 
     return (
       <video

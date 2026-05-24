@@ -21,19 +21,21 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const [mobile, setMobile] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia(MOBILE_MQ).matches
-      : false
+  /** Avoid reading `window` during first render — prevents hydration crash on mobile */
+  const [layout, setLayout] = useState<"pending" | "desktop" | "mobile">(
+    "pending"
   );
   const startedAtRef = useRef(0);
 
-  const welcomeSrc = mobile ? WELCOME_VIDEO_MOBILE : WELCOME_VIDEO;
-  const videoFit = mobile ? "cover" : "contain";
+  const welcomeSrc =
+    layout === "mobile" ? WELCOME_VIDEO_MOBILE : WELCOME_VIDEO;
+  const videoFit = layout === "mobile" ? "cover" : "contain";
+  const videoObjectPosition =
+    layout === "mobile" ? "center center" : "center center";
 
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_MQ);
-    const sync = () => setMobile(mq.matches);
+    const sync = () => setLayout(mq.matches ? "mobile" : "desktop");
     sync();
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
@@ -65,7 +67,7 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
   }, [finish]);
 
   useEffect(() => {
-    if (!videoEl) return;
+    if (layout === "pending" || !videoEl) return;
 
     finishedRef.current = false;
     setExiting(false);
@@ -123,7 +125,7 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
       video.removeEventListener("canplay", onCanPlay);
       video.pause();
     };
-  }, [videoEl, finish]);
+  }, [layout, videoEl, finish]);
 
   const handleTimeUpdate = () => {
     const video = videoEl;
@@ -158,24 +160,36 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
           initial={{ opacity: 1 }}
           animate={{ opacity: videoReady ? 0 : 1 }}
           transition={{ duration: 0.3 }}
-          className="absolute inset-0 z-[1] bg-maj-vault"
+          className={`absolute inset-0 z-[1] bg-maj-vault${
+            layout === "mobile" ? " welcome-video__backdrop--mobile" : ""
+          }`}
         />
 
-        <div className="cinematic-video-stage z-[2]">
-          <CinematicVideo
-            key={welcomeSrc}
-            ref={setVideoEl}
-            src={welcomeSrc}
-            fit={videoFit}
-            playsInline
-            muted
-            autoPlay
-            preload="auto"
-            controls={false}
-            onEnded={tryFinish}
-            onTimeUpdate={handleTimeUpdate}
-            onError={tryFinish}
-          />
+        <div
+          className={`cinematic-video-stage z-[2]${
+            layout === "mobile" ? " cinematic-video-stage--mobile-doors" : ""
+          }`}
+        >
+          {layout === "pending" ? null : (
+            <CinematicVideo
+              key={welcomeSrc}
+              ref={setVideoEl}
+              src={welcomeSrc}
+              fit={videoFit}
+              objectPosition={videoObjectPosition}
+              className={
+                layout === "mobile" ? "cinematic-video--mobile-doors" : undefined
+              }
+              playsInline
+              muted
+              autoPlay
+              preload="auto"
+              controls={false}
+              onEnded={tryFinish}
+              onTimeUpdate={handleTimeUpdate}
+              onError={tryFinish}
+            />
+          )}
         </div>
 
         <motion.p

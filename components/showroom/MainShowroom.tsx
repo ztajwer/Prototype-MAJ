@@ -48,6 +48,7 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
     cameraTilt,
     tableTilt,
     anchorY,
+    tableLiftY,
     orbitScale,
     isWalkInActive,
   } = useShowroomScrollZoom(zoneEl);
@@ -165,7 +166,7 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
           className="showroom-carousel-stage showroom-carousel-stage--table relative flex h-full w-full max-w-[min(100%,52rem)] items-center justify-center"
           style={{
             transformStyle: "preserve-3d",
-            transform: `translateY(${offsetY}px) rotateX(${cameraTilt + tableTilt}deg)`,
+            transform: `translateY(${tableLiftY + offsetY}px) rotateX(${cameraTilt + tableTilt}deg)`,
           }}
         >
           <div

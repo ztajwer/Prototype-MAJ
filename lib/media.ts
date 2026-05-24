@@ -2,9 +2,9 @@
 
 export const WELCOME_VIDEO = "/vid.mp4";
 
-/** Opening doors clip for mobile portrait (public/doors.mp4) */
+/** Opening doors clip for mobile portrait (public/mob_vid.mp4) */
 
-export const WELCOME_VIDEO_MOBILE = "/doors.mp4";
+export const WELCOME_VIDEO_MOBILE = "/mob_vid.mp4";
 
 
 

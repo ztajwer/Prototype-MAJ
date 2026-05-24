@@ -761,6 +761,26 @@ html.lenis body {
   object-position: center center;
 }
 
+/* Mobile opening doors — full portrait frame, edge-to-edge */
+.cinematic-video-stage--mobile-doors {
+  background: #0c0a08;
+}
+
+.cinematic-video--mobile-doors {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  object-fit: cover;
+  object-position: center center;
+  filter: contrast(1.05) saturate(1.1) brightness(1.03);
+}
+
+.welcome-video__backdrop--mobile {
+  background: #0c0a08;
+}
+
 /* Showroom — fixed full-screen with page background image */
 .showroom-viewport {
   touch-action: manipulation;
@@ -851,7 +871,7 @@ html.lenis body {
 }
 
 .showroom-carousel-stage--table {
-  transform-origin: 50% calc(46% + 6% * var(--showroom-land, 0));
+  transform-origin: 50% 50%;
   will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
@@ -949,8 +969,8 @@ html.lenis body {
 
 @media (max-width: 767px) {
   .showroom-stage--table {
-    --showroom-inset-top: max(3.25rem, calc(env(safe-area-inset-top) + 2.5rem));
-    --showroom-inset-bottom: max(5.75rem, calc(env(safe-area-inset-bottom) + 4.75rem));
+    --showroom-inset-top: max(3rem, calc(env(safe-area-inset-top) + 2.25rem));
+    --showroom-inset-bottom: max(5rem, calc(env(safe-area-inset-bottom) + 4rem));
     --showroom-piece: clamp(52px, 12.5vw, 68px);
     --showroom-orbit: clamp(118px, 32vw, 158px);
   }
@@ -3280,7 +3300,7 @@ body.product-page-active #main {
   }
 
   .showroom-carousel-stage--table {
-    transform-origin: 50% 54%;
+    transform-origin: 50% 50%;
   }
 
   .showroom-zoom-hint {

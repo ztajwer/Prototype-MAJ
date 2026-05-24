@@ -1,6 +1,7 @@
 "use client";
 
 export default function GlobalError({
+  error,
   reset,
 }: {
   error: Error & { digest?: string };
@@ -13,9 +14,12 @@ export default function GlobalError({
           MAJ Boutique
         </p>
         <h1 className="text-xl">Unable to load the experience</h1>
+        {process.env.NODE_ENV === "development" && error?.message ? (
+          <p className="max-w-md text-sm opacity-70">{error.message}</p>
+        ) : null}
         <button
           type="button"
-          onClick={reset}
+          onClick={() => reset()}
           className="rounded border border-[#d4bc82] bg-white px-6 py-3 text-[0.62rem] uppercase tracking-[0.28em]"
         >
           Reload
