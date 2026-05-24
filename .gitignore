@@ -46,3 +46,20 @@ start.log
 
 # vercel
 .vercel
+
+# editor / temp
+.cursor/
+tmp-css-test.css
+
+# root duplicates — assets live in public/
+/doors.mp4
+/vid.mp4
+/pla.avif
+/bl_logo.jfif
+/wh_logo.jfif
+/bra.webp
+/earing.webp
+/nec.png
+/pen.webp
+/w.webp
+/tsconfig.tsbuildinfo
