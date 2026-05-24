@@ -35,6 +35,8 @@ Product detail pages also exist at `/products/[id]`.
 
 ## Getting started
 
+All commands run from **`Prototype-MAJ/`** (this folder is the deployable app).
+
 ### Requirements
 
 - Node.js 18+
