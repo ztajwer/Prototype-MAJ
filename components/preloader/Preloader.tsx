@@ -2,6 +2,7 @@
 
 import { MajLogo } from "@/components/brand/MajLogo";
 import { BRAND } from "@/lib/data";
+import { LOGO_PRELOADER } from "@/lib/brand-logos";
 import { PRELOADER_BG } from "@/lib/media";
 import { useEffect, useRef, useState } from "react";
 
@@ -80,6 +81,7 @@ export function Preloader({ duration = 2400, onComplete }: PreloaderProps) {
         <div className="preloader__card">
           <span className="preloader__eyebrow">Maison</span>
           <MajLogo
+            src={LOGO_PRELOADER}
             background="light"
             height={128}
             priority

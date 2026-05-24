@@ -1,7 +1,7 @@
 "use client";
 
 import { CinematicVideo } from "@/components/media/CinematicVideo";
-import { WELCOME_VIDEO } from "@/lib/media";
+import { WELCOME_VIDEO, WELCOME_VIDEO_MOBILE } from "@/lib/media";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -9,6 +9,7 @@ const REVEAL_BEFORE_END_S = 0.35;
 const EXIT_FADE_MS = 800;
 const MIN_PLAY_S = 1.2;
 const LUXE_EASE = [0.76, 0, 0.24, 1] as const;
+const MOBILE_MQ = "(max-width: 767px)";
 
 type WelcomeVideoProps = {
   onComplete?: () => void;
@@ -20,7 +21,23 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [exiting, setExiting] = useState(false);
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia(MOBILE_MQ).matches
+      : false
+  );
   const startedAtRef = useRef(0);
+
+  const welcomeSrc = mobile ? WELCOME_VIDEO_MOBILE : WELCOME_VIDEO;
+  const videoFit = mobile ? "cover" : "contain";
+
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    const sync = () => setMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
@@ -146,9 +163,10 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
 
         <div className="cinematic-video-stage z-[2]">
           <CinematicVideo
+            key={welcomeSrc}
             ref={setVideoEl}
-            src={WELCOME_VIDEO}
-            fit="contain"
+            src={welcomeSrc}
+            fit={videoFit}
             playsInline
             muted
             autoPlay

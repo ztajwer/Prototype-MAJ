@@ -2493,11 +2493,11 @@ html.lenis body {
 .preloader__logo {
   height: auto;
   width: auto;
-  max-width: min(72vw, 240px);
-  border-radius: 0.9rem;
+  max-width: min(78vw, 280px);
+  border-radius: 0;
   background: transparent;
   padding: 0;
-  box-shadow: 0 10px 28px rgba(42, 32, 22, 0.14);
+  box-shadow: none;
 }
 
 .showroom-logo {

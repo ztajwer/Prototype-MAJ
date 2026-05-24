@@ -8,6 +8,8 @@ import {
 } from "@/lib/brand-logos";
 
 type MajLogoProps = {
+  /** Override default brand lockup (e.g. loader PNG) */
+  src?: string;
   /** `light` = white-bg logo (public/logos/wh_logo.png); `dark` = bl_logo on dark surfaces */
   background?: LogoBackground;
   className?: string;
@@ -18,21 +20,23 @@ type MajLogoProps = {
 };
 
 export function MajLogo({
+  src: srcOverride,
   background = "light",
   className,
   imageClassName,
   priority = false,
   height = 120,
 }: MajLogoProps) {
-  const src = logoSrcForBackground(background);
+  const src = srcOverride ?? logoSrcForBackground(background);
   const width = Math.round(height * 2.25);
   const isJfif = src.endsWith(".jfif");
+  const framed = background === "light" && !srcOverride;
 
   return (
     <span
       className={cn(
         "relative inline-flex items-center overflow-hidden",
-        background === "light" && "rounded-xl",
+        framed && "rounded-xl",
         className
       )}
     >
@@ -45,7 +49,7 @@ export function MajLogo({
         unoptimized={isJfif}
         className={cn(
           "w-auto object-contain",
-          background === "light" && "rounded-xl",
+          framed && "rounded-xl",
           imageClassName
         )}
         style={{ height: `${height}px`, width: "auto" }}

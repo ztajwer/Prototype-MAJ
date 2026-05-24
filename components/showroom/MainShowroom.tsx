@@ -38,7 +38,6 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
   const [zoneEl, setZoneEl] = useState<HTMLElement | null>(null);
   const {
     progress,
-    tableLand,
     orbitDepthDamp,
     bgScale,
     bgTranslateY,
@@ -48,8 +47,6 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
     offsetY,
     cameraTilt,
     tableTilt,
-    productScale,
-    depthPush,
     anchorY,
     orbitScale,
     isWalkInActive,
@@ -107,9 +104,9 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
     isWalkInActive
       ? null
       : zoomNorm > 0.94
-        ? "Scroll up to zoom out"
+        ? "Swipe down to step back"
         : zoomNorm < 0.92
-          ? "Scroll down to zoom in"
+          ? "Swipe up to enter the room"
           : null;
 
   return (
@@ -155,22 +152,20 @@ export function MainShowroom({ onSelect, onPrefetch }: MainShowroomProps) {
       ) : null}
 
       <motion.div
-        className={`showroom-stage showroom-stage--interactive showroom-stage--table absolute inset-x-0 z-20 flex items-center justify-center px-1 sm:px-2${
-          tableLand > 0.4 ? " showroom-stage--on-table" : ""
-        }`}
+        className="showroom-stage showroom-stage--interactive showroom-stage--table showroom-stage--on-table absolute inset-x-0 z-20 flex items-center justify-center px-1 sm:px-2"
         style={{
           top: "var(--showroom-inset-top)",
           bottom: "var(--showroom-inset-bottom)",
           perspective: "3200px",
           perspectiveOrigin: `50% ${perspectiveY}%`,
-          ["--showroom-land" as string]: tableLand,
+          ["--showroom-land" as string]: 1,
         }}
       >
         <motion.div
           className="showroom-carousel-stage showroom-carousel-stage--table relative flex h-full w-full max-w-[min(100%,52rem)] items-center justify-center"
           style={{
             transformStyle: "preserve-3d",
-            transform: `translateY(${offsetY}px) rotateX(${cameraTilt + tableTilt}deg) scale(${productScale}) translateZ(${depthPush}px)`,
+            transform: `translateY(${offsetY}px) rotateX(${cameraTilt + tableTilt}deg)`,
           }}
         >
           <div

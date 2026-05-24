@@ -8,27 +8,39 @@ export function smoothstep(t: number) {
   return x * x * (3 - 2 * x);
 }
 
-/** Max scroll — products stop on the glass table, never rush the camera */
+/** Max scroll — camera dolly through the room (environment only) */
 export const SHOWROOM_MAX_ZOOM = 1;
 
-/** Glass vitrine in `public/background.png` (desktop) */
+/** Glass table anchor in `public/background.png` (desktop) */
 export const GLASS_TABLE = {
-  anchorYStart: 20,
-  anchorYEnd: 54,
   bgOriginYStart: 30,
   bgOriginYEnd: 46,
-  perspectiveYStart: 28,
-  perspectiveYEnd: 44,
 } as const;
 
-/** Glass vitrine in `public/mob.png` (mobile portrait) */
+/** Glass table anchor in `public/mob.png` (mobile portrait) */
 export const GLASS_TABLE_MOBILE = {
-  anchorYStart: 24,
-  anchorYEnd: 52,
   bgOriginYStart: 36,
   bgOriginYEnd: 54,
-  perspectiveYStart: 30,
-  perspectiveYEnd: 52,
+} as const;
+
+/** Fixed product placement — does not change with scroll */
+const PRODUCT_LOCK = {
+  desktop: {
+    anchorY: 54,
+    orbitScale: 0.78,
+    cameraTilt: 5.5,
+    tableTilt: 4,
+    perspectiveY: 46,
+    parallaxY: 16,
+  },
+  mobile: {
+    anchorY: 52,
+    orbitScale: 0.74,
+    cameraTilt: 5,
+    tableTilt: 3.5,
+    perspectiveY: 50,
+    parallaxY: 12,
+  },
 } as const;
 
 export type ShowroomZoomState = {
@@ -54,44 +66,31 @@ export function getShowroomZoomState(
   mobile = false
 ): ShowroomZoomState {
   const progress = clamp(rawProgress, 0, SHOWROOM_MAX_ZOOM);
-  /** Camera dolly — slow at first, like stepping into the room */
-  const travel = smoothstep(Math.pow(progress, 0.94));
-  /** Products settle on the vitrine slightly after the camera moves */
-  const productProgress = clamp((progress - 0.06) / 0.94, 0, 1);
-  const land = smoothstep(productProgress);
-  const anchorLand = smoothstep(Math.pow(productProgress, 0.48));
+  /** Scroll / walk-in moves the camera through the room — background only */
+  const travel = smoothstep(Math.pow(progress, 0.9));
 
   const table = mobile ? GLASS_TABLE_MOBILE : GLASS_TABLE;
-  const {
-    anchorYStart,
-    anchorYEnd,
-    bgOriginYStart,
-    bgOriginYEnd,
-    perspectiveYStart,
-    perspectiveYEnd,
-  } = table;
-
-  const cameraStart = mobile ? 12 : 14;
-  const cameraEnd = mobile ? 5.5 : 6.5;
+  const lock = mobile ? PRODUCT_LOCK.mobile : PRODUCT_LOCK.desktop;
+  const { bgOriginYStart, bgOriginYEnd } = table;
 
   return {
     progress,
-    tableLand: land,
-    orbitDepthDamp: 1 - land * 0.88,
-    bgScale: 1 + travel * (mobile ? 0.48 : 0.58),
-    bgTranslateY: travel * (mobile ? 24 : 34),
-    /** Subtle ceiling tilt — eases flat as you walk in */
-    bgTilt: (1 - travel) * (mobile ? 4.5 : 5.5),
-    productScale: mobile ? 0.24 + land * 0.96 : 0.28 + land * 1.12,
-    orbitScale: mobile ? 0.38 + land * 0.46 : 0.4 + land * 0.48,
-    depthPush: travel * (mobile ? 12 : 16),
+    tableLand: 1,
+    orbitDepthDamp: 0.1,
+    /** Environment depth — stronger on mobile */
+    bgScale: 1 + travel * (mobile ? 0.68 : 0.56),
+    bgTranslateY: travel * (mobile ? 42 : 36),
+    bgTilt: (1 - travel) * (mobile ? 5 : 5.5),
     vanishY: bgOriginYStart + (bgOriginYEnd - bgOriginYStart) * travel,
-    perspectiveY:
-      perspectiveYStart + (perspectiveYEnd - perspectiveYStart) * travel,
-    anchorY: anchorYStart + (anchorYEnd - anchorYStart) * anchorLand,
-    offsetY: mobile ? -6 + anchorLand * 6 : -8 + anchorLand * 8,
-    /** Top-down doorway angle → natural eye-level at the vitrine */
-    cameraTilt: cameraStart + (cameraEnd - cameraStart) * travel,
-    tableTilt: land * (mobile ? 5.5 : 6.5),
+    /** Products locked on the table — size & orbit stay fixed */
+    productScale: 1,
+    orbitScale: lock.orbitScale,
+    depthPush: 0,
+    perspectiveY: lock.perspectiveY,
+    anchorY: lock.anchorY,
+    /** Subtle parallax so pieces track the table in the photo, not scale */
+    offsetY: travel * lock.parallaxY,
+    cameraTilt: lock.cameraTilt,
+    tableTilt: lock.tableTilt,
   };
 }

@@ -1,6 +1,10 @@
-/** Welcome intro clip (public/vid.mp4) */
+/** Welcome intro clip (public/vid.mp4) — desktop / landscape */
 
 export const WELCOME_VIDEO = "/vid.mp4";
+
+/** Opening doors clip for mobile portrait (public/doors.mp4) */
+
+export const WELCOME_VIDEO_MOBILE = "/doors.mp4";
 
 
 

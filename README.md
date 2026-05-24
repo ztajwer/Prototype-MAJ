@@ -147,22 +147,11 @@ All media lives in `public/`. Do **not** commit duplicate files from the project
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [Prototype Journey](./docs/PROTOTYPE-JOURNEY.md) | Version history, screenshots, demo video, client summary |
-| [Deployment](./docs/DEPLOYMENT.md) | Vercel hosting guide |
-| [Development](./docs/DEVELOPMENT.md) | Local setup and code reference |
+Full prototype documentation (Version 1 → Version 2 → Final): **[docs/PROTOTYPE-JOURNEY.md](./docs/PROTOTYPE-JOURNEY.md)**
 
 ## Deployment
 
-See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** for step-by-step Vercel hosting (free).
-
-Quick summary:
-
-1. Push code to GitHub (no `node_modules`, no `.next`)
-2. Import repo on [vercel.com](https://vercel.com)
-3. Set `NEXT_PUBLIC_SITE_URL`
-4. Deploy
+See README setup section above, or deploy via [Vercel](https://vercel.com) + GitHub repo **Prototype-MAJ**.
 
 ---
 

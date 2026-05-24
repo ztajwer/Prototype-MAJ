@@ -29,7 +29,7 @@ export type ShowroomScrollZoom = ReturnType<typeof getShowroomZoomState> & {
   isWalkInActive: boolean;
 };
 
-/** Wheel / swipe → 0–1 zoom. Scroll down = zoom in (products grow onto table). */
+/** Wheel / swipe → 0–1 environment dolly. Scroll down = walk into the room. */
 const MOBILE_MQ = "(max-width: 767px)";
 
 export function useShowroomScrollZoom(
@@ -212,7 +212,7 @@ export function useShowroomScrollZoom(
         const dy = touch.current.y - e.touches[0].clientY;
         touch.current.y = e.touches[0].clientY;
         target.current = clamp(
-          touch.current.p + dy * 0.0025,
+          touch.current.p + dy * 0.0032,
           0,
           SHOWROOM_MAX_ZOOM
         );
