@@ -1,151 +1,174 @@
-# BitVista Maison — Cinematic Luxury Jewelry
+# MAJ Boutique — Luxury Jewelry Showroom
 
-A high-end cinematic prototype for a Parisian _maison de haute joaillerie_.
-The site is intentionally not a conventional e-commerce experience — it is a
-private, futuristic showroom that opens like a film: a preloader, a pair of
-massive doors, then a 3D vault of rings, necklaces, bracelets, and watches.
+A cinematic luxury jewelry prototype for **MAJ Boutique**. The experience opens like a short film: preloader → welcome video → interactive 3D showroom → product customize room.
 
-## Stack
-
-- **Next.js 14** (App Router · static generation · edge OG images)
-- **React 18 / TypeScript**
-- **TailwindCSS** (luxury design tokens — ink, gold, chrome)
-- **Framer Motion** (cinematic UI transitions, scroll-driven motion)
-- **GSAP** (available for advanced timeline orchestration)
-- **Lenis** (premium smooth scrolling)
-- **React Three Fiber / drei / three.js** (real-time 3D jewelry with
-  `MeshTransmissionMaterial` for refraction, chromatic aberration, and
-  contact shadows)
-
-## Cinematic Sequence
-
-1. **Preloader (~2.6s)** — animated golden monogram, ambient particles,
-   progress meter, brand caption. Heavy 3D children mount in the background.
-2. **Door Sequence (~3.4s)** — two metallic / glass leaves with gold trim
-   and handles open in slow-motion, a volumetric beam escapes the gap.
-3. **Showroom Hero** — a floating rotating diamond ring with foiled
-   typography, light beams, and ambient particles.
-4. **Featured Collections** — `Celestial Atelier`, `Maison Noir`,
-   `Constellation`, `Méridien` — each previews a signature silhouette in
-   3D when hovered.
-5. **The Vault (Interactive Showcase)** — filterable by Rings / Necklaces /
-   Bracelets / Watches; each click swaps the 3D scene with crossfade.
-6. **Heritage & Craftsmanship** — vertical timeline from 1924 to today
-   with a gold progress line driven by scroll.
-7. **Premium Gallery** — editorial grid of jewelry tiles with bespoke SVG
-   glyphs per product type.
-8. **Press & Accolades** — auto-scrolling marquee of awards.
-9. **Collector Testimonials** — cinematic auto-rotating quotes.
-10. **Booking Section** — multi-step booking with interests, appointment
-    type, and concierge contact.
-11. **Final Cinematic CTA** — closing reveal with global atelier list.
-12. **Minimal Luxury Footer** — newsletter, columns, brand watermark.
-
-## Product Detail (`/products/[id]`)
-
-- Fully interactive 3D viewer (drag, pinch, zoom via `OrbitControls`)
-- Live metal switcher — Yellow Gold / Rose / Platinum / Black Rhodium
-- Live stone tone switcher — Diamond / Sapphire / Emerald / Ruby
-- Auto-rotate toggle, specs grid, breadcrumb, related pieces
-- Geometry per silhouette: halo · solitaire · eternity · trinity ·
-  pendant · choker · bangle · watch
-
-## SEO
-
-Built mobile-first, semantic, fast, and discoverable:
-
-- **`<head>` metadata** — title template, description, keywords,
-  canonical, theme color, viewport
-- **Open Graph + Twitter Card** with edge-generated **PNG OG images** at
-  `/opengraph-image` and `/products/[id]/opengraph-image`
-- **JSON-LD structured data**:
-  - `Organization` + `JewelryStore` (home, with address, contact, social,
-    price range)
-  - `WebSite`
-  - `ItemList` of products on the homepage
-  - `Product` + `Offer` (price, currency, availability) on detail pages
-  - `BreadcrumbList` on detail pages
-- **Sitemap** at `/sitemap.xml` (auto-built from `lib/data.ts`)
-- **Robots** at `/robots.txt` (allow everything, sitemap reference)
-- **Edge-generated icons** at `/icon` and `/apple-icon`
-- **Semantic landmarks** — `<header>`, `<main>`, `<nav>`, `<article>`,
-  `<aside>`, `<footer>`, `aria-labelledby`, breadcrumbs
-- **Skip-to-content** link for keyboard users
-- **`prefers-reduced-motion`** honored globally
-
-Keyword footprint targets:
-
-> luxury jewelry · premium rings · futuristic jewelry · luxury
-> accessories · designer jewelry · high-end jewelry showroom · haute
-> joaillerie · diamond ring · luxury necklace · luxury bracelet ·
-> luxury watch
-
-## Performance
-
-- Production homepage: **154 kB First Load JS**
-- Production product page: **95.7 kB First Load JS** (heavy 3D viewer
-  lazy-loaded after first paint)
-- All 8 product pages statically generated at build time
-- OG images and icons rendered on the edge runtime, cached at the CDN
-- 3D scenes use a single torus / cylinder backbone with cinematic
-  lighting and `MeshTransmissionMaterial` — small geometry, big drama
-- DPR capped at 1.7×, contact shadows, and `Float` are tuned for
-  smooth 60fps on mid-tier laptops
-
-## Project Layout
-
-```
-app/
-  layout.tsx                  fonts · metadata · JSON-LD · nav · cursor
-  page.tsx                    home: orchestrated sequence
-  not-found.tsx
-  opengraph-image.tsx         edge-rendered PNG (home)
-  icon.tsx · apple-icon.tsx   edge-rendered favicons
-  robots.ts · sitemap.ts
-  products/[id]/page.tsx
-  products/[id]/opengraph-image.tsx
-components/
-  experience/                 orchestrator state machine
-  preloader/                  Preloader · LogoMark · AmbientParticles
-  door/                       DoorSequence (CSS-3D leaves + lighting)
-  three/                      JewelryModel (8 silhouettes) · RingScene
-  product/                    ProductViewer · ProductViewerLazy
-  providers/                  SmoothScrollProvider (Lenis)
-  sections/                   Hero · Collections · ProductShowcase ·
-                              Heritage · Gallery · Accolades ·
-                              Testimonials · Booking · FinalCTA ·
-                              Footer · SectionHeader
-  seo/                        JsonLd (Organization, WebSite, ItemList,
-                              Product, Breadcrumb)
-  ui/                         LuxeCursor · Navigation · NoiseLayer
-lib/
-  data.ts                     BRAND · PRODUCTS · COLLECTIONS · HERITAGE
-                              ACCOLADES · TESTIMONIALS · NAV_ITEMS ·
-                              GALLERY_TILES
-  utils.ts                    cn() · lerp · clamp · mapRange
-```
-
-## Scripts
-
-```bash
-npm run dev          # start the cinematic experience (default :3000)
-npm run build        # production build (static + edge)
-npm run start        # serve the production build
-npm run lint         # ESLint
-npm run type-check   # strict tsc
-```
-
-## Future Extensions
-
-- Drop real GLB / GLTF jewelry models into `public/models` and swap the
-  geometry inside `components/three/JewelryModel.tsx`.
-- Wire the booking form to an edge route + transactional email
-  (Resend / Postmark).
-- Add CMS-backed editorial stories (Sanity, MDX) for the gallery.
-- Add ambient cinematic audio (architecture already supports it via
-  `ExperienceOrchestrator` phase events).
-- Localize for `en-FR / ja / ar` to extend the SEO footprint.
+**Repository:** [github.com/ztajwer/Prototype-MAJ](https://github.com/ztajwer/Prototype-MAJ)
 
 ---
 
-Composed with discipline. Engineered with light.
+## User flow
+
+1. **Preloader** — Silk backdrop (`pla.avif`), logo, progress bar. Tap to skip.
+2. **Welcome video** — Intro clip (`vid.mp4`). Tap or wait to continue.
+3. **Showroom** — Boutique interior with 6 products on a rotating carousel.
+   - Automatic slow zoom-in on entry (first-person walk-in effect)
+   - Scroll / swipe to zoom in and out
+   - Carousel speed controls (pause, fast, medium, slow)
+   - Click a product → customize panel
+4. **Customize room** — View, rotate, and resize the selected piece. Back to showroom anytime.
+
+Product detail pages also exist at `/products/[id]`.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|--------|------------|
+| Framework | Next.js 14 (App Router) |
+| UI | React 18, TypeScript |
+| Styling | Tailwind CSS, global CSS |
+| Motion | Framer Motion |
+| 3D (optional paths) | Three.js |
+
+---
+
+## Getting started
+
+### Requirements
+
+- Node.js 18+
+- npm 9+
+
+### Install & run
+
+```bash
+git clone https://github.com/ztajwer/Prototype-MAJ.git
+cd Prototype-MAJ
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Other scripts
+
+```bash
+npm run build       # production build
+npm run start       # serve production build
+npm run lint        # ESLint
+npm run type-check  # TypeScript check
+```
+
+---
+
+## Environment variables
+
+Copy `.env.example` to `.env.local` for local development:
+
+```env
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+For production (Vercel), set:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
+```
+
+Used for SEO: canonical URLs, Open Graph, sitemap, robots.txt, JSON-LD.
+
+---
+
+## Project structure
+
+```
+app/                    Next.js routes, layout, global CSS
+  page.tsx              Home page (showroom experience)
+  products/[id]/        Product detail / SEO pages
+  sitemap.ts            Auto-generated sitemap
+  robots.ts             Crawler rules
+
+components/
+  experience/           Preloader → video → showroom flow
+  preloader/            Loading screen
+  welcome/              Welcome video
+  showroom/             Main showroom, customize room, backgrounds
+  effects/              Luxury cursor (white sparkle trail)
+  brand/                MAJ logo
+  seo/                  JSON-LD, SEO catalog
+
+hooks/
+  useShowroomScrollZoom.ts   Scroll / touch zoom + walk-in animation
+
+lib/
+  data.ts               Brand info, products, showroom pieces
+  media.ts              Public asset paths
+  showroom-zoom.ts      Zoom & table placement math
+  product-images.ts     Product image mapping
+
+public/
+  background.png        Desktop showroom backdrop
+  mob.png               Mobile showroom backdrop
+  pla.avif              Loader & customize page backdrop
+  vid.mp4               Welcome video
+  products/             Jewelry product images
+  logos/                Brand logos
+```
+
+---
+
+## Key features
+
+- **Cinematic walk-in** — Slow auto zoom when the showroom opens
+- **Scroll zoom** — Mouse wheel / touch to move closer or further
+- **3D carousel** — Six products orbit with depth and hover states
+- **White product discs** — Name tags under each piece
+- **Customize room** — Drag to rotate, slider for size, auto-turn
+- **Sparkle cursor** — White glitter trail on desktop
+- **SEO ready** — Metadata, OG images, sitemap, structured data
+- **Responsive** — Separate mobile background and tuned layout
+
+---
+
+## Assets
+
+All media lives in `public/`. Do **not** commit duplicate files from the project root — use `public/` only.
+
+| File | Purpose |
+|------|---------|
+| `pla.avif` | Preloader & customize background |
+| `background.png` | Desktop showroom |
+| `mob.png` | Mobile showroom |
+| `vid.mp4` | Welcome video |
+| `products/*` | Product photography |
+
+---
+
+## Deployment
+
+See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** for step-by-step Vercel hosting (free).
+
+Quick summary:
+
+1. Push code to GitHub (no `node_modules`, no `.next`)
+2. Import repo on [vercel.com](https://vercel.com)
+3. Set `NEXT_PUBLIC_SITE_URL`
+4. Deploy
+
+---
+
+## What not to push
+
+These are ignored via `.gitignore`:
+
+- `node_modules/` — reinstall with `npm install`
+- `.next/` — rebuild with `npm run build`
+- `.env` / `.env.local` — secrets stay local
+- `.cursor/` — editor files
+
+---
+
+## License
+
+Private prototype — MAJ Boutique.
