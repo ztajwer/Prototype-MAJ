@@ -145,6 +145,14 @@ All media lives in `public/`. Do **not** commit duplicate files from the project
 
 ---
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Prototype Journey](./docs/PROTOTYPE-JOURNEY.md) | Version history, screenshots, demo video, client summary |
+| [Deployment](./docs/DEPLOYMENT.md) | Vercel hosting guide |
+| [Development](./docs/DEVELOPMENT.md) | Local setup and code reference |
+
 ## Deployment
 
 See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** for step-by-step Vercel hosting (free).
