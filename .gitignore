@@ -1,0 +1,48 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+node_modules
+.next
+dist
+build
+coverage
+
+# testing
+coverage
+
+# next.js
+.next
+out
+build
+dist
+
+# production
+*.tsbuildinfo
+next-env.d.ts
+
+# misc
+.DS_Store
+*.pem
+.vscode
+.idea
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+start.log
+
+# stray copies (use public/ only)
+/b.png
+/wh_logo.png
+/ring.png
+
+# env
+.env*.local
+.env
+
+# vercel
+.vercel
