@@ -1,10 +1,16 @@
-/** Welcome intro clip (public/vid.mp4) — desktop / landscape */
+/** Opening doors — tablet (768px–1023px, public/vid.mp4) */
 
 export const WELCOME_VIDEO = "/vid.mp4";
 
-/** Opening doors clip for mobile portrait (public/mob_vid.mp4) */
+export const WELCOME_VIDEO_TABLET = WELCOME_VIDEO;
+
+/** Opening doors — mobile (≤767px, public/mob_vid.mp4) */
 
 export const WELCOME_VIDEO_MOBILE = "/mob_vid.mp4";
+
+/** Opening doors — laptop / desktop (≥1024px, public/lap_big.mp4) */
+
+export const WELCOME_VIDEO_LARGE = "/lap_big.mp4";
 
 
 

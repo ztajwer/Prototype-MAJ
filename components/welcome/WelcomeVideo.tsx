@@ -1,7 +1,11 @@
 "use client";
 
 import { CinematicVideo } from "@/components/media/CinematicVideo";
-import { WELCOME_VIDEO, WELCOME_VIDEO_MOBILE } from "@/lib/media";
+import {
+  WELCOME_VIDEO,
+  WELCOME_VIDEO_LARGE,
+  WELCOME_VIDEO_MOBILE,
+} from "@/lib/media";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -10,6 +14,21 @@ const EXIT_FADE_MS = 800;
 const MIN_PLAY_S = 1.2;
 const LUXE_EASE = [0.76, 0, 0.24, 1] as const;
 const MOBILE_MQ = "(max-width: 767px)";
+const LARGE_MQ = "(min-width: 1024px)";
+
+type WelcomeLayout = "pending" | "mobile" | "tablet" | "large";
+
+function resolveWelcomeLayout(): WelcomeLayout {
+  if (window.matchMedia(MOBILE_MQ).matches) return "mobile";
+  if (window.matchMedia(LARGE_MQ).matches) return "large";
+  return "tablet";
+}
+
+const WELCOME_SRC: Record<Exclude<WelcomeLayout, "pending">, string> = {
+  mobile: WELCOME_VIDEO_MOBILE,
+  tablet: WELCOME_VIDEO,
+  large: WELCOME_VIDEO_LARGE,
+};
 
 type WelcomeVideoProps = {
   onComplete?: () => void;
@@ -21,24 +40,31 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const [exiting, setExiting] = useState(false);
-  /** Avoid reading `window` during first render — prevents hydration crash on mobile */
-  const [layout, setLayout] = useState<"pending" | "desktop" | "mobile">(
-    "pending"
-  );
+  /** Avoid reading `window` during first render — prevents hydration crash */
+  const [layout, setLayout] = useState<WelcomeLayout>("pending");
   const startedAtRef = useRef(0);
 
   const welcomeSrc =
-    layout === "mobile" ? WELCOME_VIDEO_MOBILE : WELCOME_VIDEO;
-  const videoFit = layout === "mobile" ? "cover" : "contain";
-  const videoObjectPosition =
-    layout === "mobile" ? "center center" : "center center";
+    layout === "pending" ? "" : WELCOME_SRC[layout];
+  const isLarge = layout === "large";
+  /** lap_big is composed for wide screens — full-bleed cover */
+  const videoFit = isLarge ? "cover" : "contain";
+  const videoObjectPosition = "center center";
+  const videoClassName = isLarge
+    ? "cinematic-video--doors cinematic-video--doors-cover"
+    : "cinematic-video--doors";
 
   useEffect(() => {
-    const mq = window.matchMedia(MOBILE_MQ);
-    const sync = () => setLayout(mq.matches ? "mobile" : "desktop");
+    const mobileMq = window.matchMedia(MOBILE_MQ);
+    const largeMq = window.matchMedia(LARGE_MQ);
+    const sync = () => setLayout(resolveWelcomeLayout());
     sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    mobileMq.addEventListener("change", sync);
+    largeMq.addEventListener("change", sync);
+    return () => {
+      mobileMq.removeEventListener("change", sync);
+      largeMq.removeEventListener("change", sync);
+    };
   }, []);
 
   useEffect(() => {
@@ -159,16 +185,19 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
           aria-hidden
           initial={{ opacity: 1 }}
           animate={{ opacity: videoReady ? 0 : 1 }}
-          transition={{ duration: 0.3 }}
-          className={`absolute inset-0 z-[1] bg-maj-vault${
-            layout === "mobile" ? " welcome-video__backdrop--mobile" : ""
+          transition={{ duration: 0.85, ease: LUXE_EASE }}
+          className={`absolute inset-0 z-[1] welcome-video__backdrop--doors${
+            isLarge ? " welcome-video__backdrop--doors-large" : " bg-maj-vault"
           }`}
         />
 
-        <div
-          className={`cinematic-video-stage z-[2]${
-            layout === "mobile" ? " cinematic-video-stage--mobile-doors" : ""
+        <motion.div
+          className={`cinematic-video-stage cinematic-video-stage--doors z-[2]${
+            isLarge ? " cinematic-video-stage--doors-large" : ""
           }`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoReady ? 1 : 0 }}
+          transition={{ duration: 0.9, ease: LUXE_EASE }}
         >
           {layout === "pending" ? null : (
             <CinematicVideo
@@ -177,9 +206,7 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
               src={welcomeSrc}
               fit={videoFit}
               objectPosition={videoObjectPosition}
-              className={
-                layout === "mobile" ? "cinematic-video--mobile-doors" : undefined
-              }
+              className={videoClassName}
               playsInline
               muted
               autoPlay
@@ -190,16 +217,16 @@ export function WelcomeVideo({ onComplete }: WelcomeVideoProps) {
               onError={tryFinish}
             />
           )}
-        </div>
+        </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: videoReady ? 0.7 : 0, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.9 }}
-          className="pointer-events-none absolute inset-x-0 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-[3] text-center font-sans text-[0.62rem] uppercase tracking-[0.5em] text-maj-gold/90"
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: videoReady ? 1 : 0, y: 0 }}
+          transition={{ delay: 0.5, duration: 1.1, ease: LUXE_EASE }}
+          className="welcome-video__caption pointer-events-none absolute inset-x-0 bottom-0 z-[3]"
         >
-          Welcome to MAJ Boutique
-        </motion.p>
+          <p className="welcome-video__caption-text">Welcome to MAJ Boutique</p>
+        </motion.div>
       </motion.div>
     </AnimatePresence>
   );

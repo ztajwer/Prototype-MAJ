@@ -761,24 +761,99 @@ html.lenis body {
   object-position: center center;
 }
 
-/* Mobile opening doors — full portrait frame, edge-to-edge */
-.cinematic-video-stage--mobile-doors {
+/* Opening doors — full clip visible, no crop (all viewports) */
+.cinematic-video-stage--doors {
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
+  min-height: 100svh;
   background: #0c0a08;
 }
 
-.cinematic-video--mobile-doors {
+.cinematic-video.cinematic-video--doors {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 100dvh;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   object-position: center center;
-  filter: contrast(1.05) saturate(1.1) brightness(1.03);
+  filter: contrast(1.05) saturate(1.08) brightness(1.02);
 }
 
-.welcome-video__backdrop--mobile {
+/* Laptop / desktop — lap_big.mp4 full-bleed edge to edge */
+@media (min-width: 1024px) {
+  .cinematic-video-stage--doors-large {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    min-height: 100svh;
+    overflow: hidden;
+    background: #0a0907;
+  }
+
+  .cinematic-video.cinematic-video--doors-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    filter: contrast(1.06) saturate(1.09) brightness(1.02);
+  }
+}
+
+/* Caption — boutique typography */
+.welcome-video__caption {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(10, 9, 7, 0.35) 42%,
+    rgba(10, 9, 7, 0.72) 100%
+  );
+}
+
+.welcome-video__caption-text {
+  margin: 0 auto;
+  max-width: 28rem;
+  padding: 0 1.25rem 0.35rem;
+  text-align: center;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.55em;
+  text-indent: 0.55em;
+  text-transform: uppercase;
+  color: rgba(212, 188, 140, 0.92);
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(180, 150, 90, 0.18);
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cinematic-video-stage--doors {
+    width: 100vw;
+    height: 100dvh;
+    height: 100svh;
+  }
+
+  .cinematic-video.cinematic-video--doors {
+    min-height: 100%;
+  }
+}
+
+.welcome-video__backdrop--doors {
   background: #0c0a08;
+}
+
+.welcome-video__backdrop--doors-large {
+  background: transparent;
 }
 
 /* Showroom — fixed full-screen with page background image */

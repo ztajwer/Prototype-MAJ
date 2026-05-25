@@ -8,6 +8,7 @@ import {
   PAGE_BACKGROUND_MOBILE,
   PRELOADER_BG,
   WELCOME_VIDEO,
+  WELCOME_VIDEO_LARGE,
   WELCOME_VIDEO_MOBILE,
 } from "@/lib/media";
 import { prefetchAsset } from "@/lib/prefetch";
@@ -41,6 +42,7 @@ export function ExperienceOrchestrator({
     prefetchAsset(PRELOADER_BG);
     prefetchAsset(WELCOME_VIDEO);
     prefetchAsset(WELCOME_VIDEO_MOBILE);
+    prefetchAsset(WELCOME_VIDEO_LARGE);
     prefetchAsset(PAGE_BACKGROUND);
     prefetchAsset(PAGE_BACKGROUND_MOBILE);
   }, []);
